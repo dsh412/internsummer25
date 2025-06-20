@@ -7,7 +7,6 @@ import { lusitana } from '@/app/ui/fonts';
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col">
-      {/* Hero Section with Solid Background */}
       <div className="bg-blue-900 text-white py-16 px-6 md:px-20">
         <h1
           className={`${lusitana.className} text-3xl md:text-5xl font-bold`}
