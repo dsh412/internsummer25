@@ -25,7 +25,7 @@ const links = [
   },
   { name: 'Game', 
     href: '/dashboard/game',
-    icon: UserGroupIcon },
+    icon: DocumentDuplicateIcon },
 ];
 
 export default function NavLinks() {
