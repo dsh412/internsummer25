@@ -1,11 +1,11 @@
-import { Data } from 'pg';
+import { Pool } from 'pg';
 
-const data = new Data({
-    user: process.env.PGUSER,
+const pool = new Pool({
     host: process.env.PGHOST,
-    database: process.env.PGDATABASE,
+    port: process.env.PGPORT,
+    dbname: process.env.PGDATABASE,
+    user: process.env.PGUSER,
     password: process.env.PGPASSWORD,
-    port: parseInt(process.env.PGPORT || '5432'),
 });
 
-export default data;
+export default pool;
