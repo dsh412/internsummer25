@@ -1,22 +1,30 @@
 import React from "react";
-import { Nav, NavLink, NavMenu } from "./NavbarElements";
+import { FaBars } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import "./NavbarElements.css";
 
 const Navbar = () => {
     return (
         <>
-            <Nav>
-                <NavMenu>
-                    <NavLink to="/players" activeStyle>
+            <nav className="nav">
+                <div className="bars">
+                    < FaBars />
+                </div>
+                <div className="nav-menu">
+                    <NavLink to="/" className="nav-link" activeClassName="active">
+                        Home
+                    </NavLink>
+                    <NavLink to="/players" className="nav-link" activeClassName="active">
                         Players
                     </NavLink>
-                    <NavLink to="/teams" activeStyle>
+                    <NavLink to="/teams" className="nav-link" activeClassName="active">
                         Teams
                     </NavLink>
-                    <NavLink to="/games" activeStyle>
+                    <NavLink to="/games" className="nav-link" activeClassName="active">
                         Games
                     </NavLink>
-                </NavMenu>
-            </Nav>
+                </div>
+            </nav>
         </>
     );
 };

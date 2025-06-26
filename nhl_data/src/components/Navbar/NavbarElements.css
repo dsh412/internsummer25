@@ -1,0 +1,56 @@
+:root {
+  --nav-bg: #e6e6fa;
+  --text-color: #4b5563;
+  --active-color: #6366f1;
+  --mobile-icon: #6b7280;
+}
+
+.nav {
+  background: var(--nav-bg);
+  height: 85px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem calc((100vw - 1000px) / 2);
+  z-index: 12;
+}
+
+.nav-link {
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 1rem;
+  height: 100%;
+  cursor: pointer;
+}
+
+.nav-link.active {
+  color: var(--active-color);
+}
+
+.bars {
+  display: none;
+  color: var(--mobile-icon);
+}
+
+@media screen and (max-width: 768px) {
+  .bars {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-100%, 75%);
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+
+  .nav-menu {
+    display: none;
+  }
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  margin-right: -24px;
+}
