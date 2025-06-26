@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS teams CASCADE;
+
 CREATE TABLE teams (
     team_id INT PRIMARY KEY,
     name VARCHAR(100),

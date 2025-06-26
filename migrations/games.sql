@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS games CASCADE;
+
 CREATE TABLE games (
     game_id BIGINT PRIMARY KEY,
     season VARCHAR(10),

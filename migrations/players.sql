@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS players CASCADE;
+
 CREATE TABLE players (
     player_id INT PRIMARY KEY,
     full_name VARCHAR(100),
