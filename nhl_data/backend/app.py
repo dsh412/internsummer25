@@ -1,16 +1,26 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 import psycopg2
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 CORS(app)
 
+load_dotenv()
+
+pg_user = os.getenv("PGUSER")
+pg_password = os.getenv("PGPASSWORD")
+pg_database = os.getenv("PGDATABASE")
+pg_host = os.getenv("PGHOST")
+pg_port = os.getenv("PGPORT")
+
 conn = psycopg2.connect(
-    dbname="postgres",
-    user="postgres",
-    password="Penguins11$",
-    host="localhost",
-    port="5432"
+    dbname=pg_database,
+    user=pg_user,
+    password=pg_password,
+    host=pg_host,
+    port=pg_port
 )
 
 @app.route('/api/players')
