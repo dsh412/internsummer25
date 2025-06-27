@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import "../App.css";
 
 function Games() {
   const [games, setGames] = useState([]);
@@ -26,7 +27,7 @@ function Games() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-        <h1 className="text-2x1 font-bold mb-4">Game Directory</h1>
+        <h1 className="directory-title">Game Directory</h1>
         
         {/* Filter Controls */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">

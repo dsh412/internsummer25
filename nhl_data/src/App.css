@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+
+.directory-title {
+  padding-top: 2em;
+  font-size: 1.5em;
+}

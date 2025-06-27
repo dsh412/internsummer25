@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import "../App.css";
 
 function Players() {
     const [players, setPlayers] = useState([]);
@@ -27,7 +28,7 @@ function Players() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Player Directory</h1>
+        <h1 className="directory-title">Player Directory</h1>
 
       {/* Filter controls */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6">

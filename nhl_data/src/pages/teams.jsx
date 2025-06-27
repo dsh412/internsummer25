@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import "../App.css";
 
 function Teams() {
   const [teams, setTeams] = useState([]);
@@ -27,7 +28,7 @@ function Teams() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-        <h1 className="text-2x1 font-bold mb-4">Team Directory</h1>
+        <h1 className="directory-title">Team Directory</h1>
 
         {/* Filter controls */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
