@@ -4,7 +4,7 @@ import axios from 'axios';
 function Players() {
   const [players, setPlayers] = useState([]);
   const [search, setSearch] = useState('');
-  const [position, setPosition] = useState('');
+  const [primary_position, setPosition] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/players')
@@ -18,8 +18,8 @@ function Players() {
       .toLowerCase()
       .includes(search.toLowerCase());
 
-    const matchesPosition = position
-      ? player.position?.toLowerCase() === position.toLowerCase()
+    const matchesPosition = primary_position
+      ? player.primary_position?.toLowerCase() === primary_position.toLowerCase()
       : true;
 
     return matchesSearch && matchesPosition;
@@ -40,7 +40,7 @@ function Players() {
         />
 
         <select
-          value={position}
+          value={primary_position}
           onChange={e => setPosition(e.target.value)}
           className="p-2 border rounded"
         >
