@@ -2,54 +2,54 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Players() {
-  const [players, setPlayers] = useState([]);
-  const [search, setSearch] = useState('');
-  const [primary_position, setPosition] = useState('');
+    const [players, setPlayers] = useState([]);
+    const [search, setSearch] = useState('');
+    const [primary_position, setPosition] = useState('');
 
-  useEffect(() => {
-    axios.get('http://localhost:5000/api/players')
-      .then(res => setPlayers(res.data))
-      .catch(err => console.error(err));
-  }, []);
+    useEffect(() => {
+        axios.get('http://localhost:5000/api/players')
+            .then(res => setPlayers(res.data))
+            .catch(err => console.error(err));
+    }, []);
 
-  const filteredPlayers = players.filter(player => {
-    const matchesSearch = Object.values(player)
-      .join(' ')
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const filteredPlayers = players.filter(player => {
+        const matchesSearch = Object.values(player)
+            .join(' ')
+            .toLowerCase()
+            .includes(search.toLowerCase());
 
-    const matchesPosition = primary_position
-      ? player.primary_position?.toLowerCase() === primary_position.toLowerCase()
-      : true;
+        const matchesPosition = primary_position
+            ? player.primary_position?.toLowerCase() === primary_position.toLowerCase()
+            : true;
 
     return matchesSearch && matchesPosition;
-  });
+    });
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Player Directory</h1>
+        <h1 className="text-2xl font-bold mb-4">Player Directory</h1>
 
       {/* Filter controls */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <input
-          type="text"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search all fields..."
-          className="flex-1 p-2 border rounded"
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search all fields..."
+            className="flex-1 p-2 border rounded"
         />
 
         <select
-          value={primary_position}
-          onChange={e => setPosition(e.target.value)}
-          className="p-2 border rounded"
+            value={primary_position}
+            onChange={e => setPosition(e.target.value)}
+            className="p-2 border rounded"
         >
-          <option value="">All Positions</option>
-          <option value="RW">Right Wing</option>
-          <option value="LW">Left Wing</option>
-          <option value="C">Center</option>
-          <option value="D">Defense</option>
-          <option value="G">Goalie</option>
+            <option value="">All Positions</option>
+            <option value="RW">Right Wing</option>
+            <option value="LW">Left Wing</option>
+            <option value="C">Center</option>
+            <option value="D">Defense</option>
+            <option value="G">Goalie</option>
         </select>
       </div>
 
