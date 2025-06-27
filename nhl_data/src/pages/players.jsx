@@ -3,6 +3,8 @@ import axios from 'axios';
 
 function Players() {
   const [players, setPlayers] = useState([]);
+  const [search, setSearch] = useState('');
+  const [position, setPosition] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/players')
@@ -10,18 +12,66 @@ function Players() {
       .catch(err => console.error(err));
   }, []);
 
+  const filteredPlayers = players.filter(player => {
+    const matchesSearch = Object.values(player)
+      .join(' ')
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesPosition = position
+      ? player.primary_postion?.toLowerCase() === position.toLowerCase()
+      : true;
+
+    return matchesSearch && matchesPosition;
+  });
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Players</h1>
-      <ul className="space-y-2">
-        {players.map(player => (
-          <li key={player.player_id} className="p-2 border rounded shadow">
-            {player.full_name} - {player.active}
-          </li>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Player Directory</h1>
+
+      {/* Filter controls */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search all fields..."
+          className="flex-1 p-2 border rounded"
+        />
+
+        <select
+          value={position}
+          onChange={e => setPosition(e.target.value)}
+          className="p-2 border rounded"
+        >
+          <option value="">All Positions</option>
+          <option value="RW">Right Wing</option>
+          <option value="LW">Left Wing</option>
+          <option value="C">Center</option>
+          <option value="D">Defense</option>
+          <option value="G">Goalie</option>
+        </select>
+      </div>
+
+      {/* Display results */}
+      <div className="grid gap-4">
+        {filteredPlayers.map((player, idx) => (
+          <div key={idx} className="border rounded p-4 shadow">
+            {Object.entries(player).map(([key, value]) => (
+              <div key={key}>
+                <strong>{key}:</strong> {value}
+              </div>
+            ))}
+          </div>
         ))}
-      </ul>
+
+        {filteredPlayers.length === 0 && (
+          <div className="text-gray-500">No players match your criteria.</div>
+        )}
+      </div>
     </div>
   );
 }
 
 export default Players;
+
