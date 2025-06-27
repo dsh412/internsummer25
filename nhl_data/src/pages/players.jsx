@@ -19,7 +19,7 @@ function Players() {
       .includes(search.toLowerCase());
 
     const matchesPosition = position
-      ? player.primary_postion?.toLowerCase() === position.toLowerCase()
+      ? player.position?.toLowerCase() === position.toLowerCase()
       : true;
 
     return matchesSearch && matchesPosition;

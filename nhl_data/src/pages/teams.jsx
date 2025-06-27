@@ -3,6 +3,8 @@ import axios from 'axios';
 
 function Teams() {
   const [teams, setTeams] = useState([]);
+  const [search, setSearch] = useState('');
+  const [conference, setConference] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/teams')
@@ -10,16 +12,60 @@ function Teams() {
       .catch(err => console.error(err));
   }, []);
 
+  const filteredTeams = teams.filter(team => {
+    const matchesSearch = Object.values(team)
+        .join(' ')
+        .toLowerCase()
+        .includes(search.toLowerCase());
+    
+    const matchesConference = conference
+        ? team.conference?.toLowerCase() === conference.toLowerCase()
+        : true;
+    
+    return matchesSearch && matchesConference;
+  });
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Teams</h1>
-      <ul className="space-y-2">
-        {teams.map(team => (
-          <li key={team.team_id} className="p-2 border rounded shadow">
-            {team.name} - {team.division}
-          </li>
-        ))}
-      </ul>
+    <div className="p-6 max-w-4xl mx-auto">
+        <h1 className="text-2x1 font-bold mb-4">Team Directory</h1>
+
+        {/* Filter controls */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search all fields..."
+                className="flex-1 p-2 border rounded"
+            />
+            
+            <select
+                value={conference}
+                onChange={e => setConference(e.target.value)}
+                className="p-2 border rounded"
+            >
+                <option value="">All Conferences</option>
+                <option value="Eastern">Eastern</option>
+                <option value="Western">Western</option>
+            </select>
+        </div>
+
+        {/* Display Results */}
+        <div className="grid gap-4">
+            {filteredTeams.map((team, idx) => (
+                <div key={idx} className="border rounded p-4 shadow">
+                    {Object.entries(team).map(([key, value]) => (
+                        <div key={key}>
+                            <strong>{key}:</strong> {value}
+                        </div>
+                    ))}
+                </div>
+            ))}
+
+            {filteredTeams.length === 0 && (
+                <div className="text-gray-500">No teams matched your criteria.</div>
+            )}
+        </div>
     </div>
   );
 }
