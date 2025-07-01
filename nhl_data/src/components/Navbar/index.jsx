@@ -15,6 +15,7 @@ export default function Navbar() {
                     <NavLink to="/players" className="nav-link" activeClassName="active">Players</NavLink>
                     <NavLink to="/teams" className="nav-link" activeClassName="active">Teams</NavLink>
                     <NavLink to="/games" className="nav-link" activeClassName="active">Games</NavLink>
+                    <NavLink to="/test" className="nav-link" activeClassName="active">Test</NavLink>
                 </div>
             </nav>
         </>
