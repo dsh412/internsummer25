@@ -56,7 +56,7 @@ def get_games():
 @app.route('/api/test')
 def get_pie():
     cur = conn.cursor()
-    cur.execute("SELECT * FROM nhl_data.players;")
+    cur.execute("SELECT full_name, weight FROM nhl_data.players;")
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
     data = [dict(zip(columns, row)) for row in rows]
