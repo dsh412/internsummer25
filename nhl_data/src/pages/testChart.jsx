@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { PieChart, Pie, Tooltip, Cell } from 'recharts';
 import axios from 'axios';
 
-function Test() {
+function TestChart() {
   const data = [
     { name: 'Group A', value: 400 },
     { name: 'Group B', value: 300 },
@@ -38,4 +38,4 @@ function Test() {
   )
 }
 
-export default Test;
+export default TestChart;

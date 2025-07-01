@@ -53,7 +53,7 @@ def get_games():
     cur.close()
     return jsonify(data)
 
-@app.route('/api/test')
+@app.route('/api/testChart')
 def get_pie():
     cur = conn.cursor()
     cur.execute("SELECT full_name, weight FROM nhl_data.players;")
