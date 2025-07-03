@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS nhl_data.fullTeamName (
 
 /* Insert default: "Edmonton Oilers", fr : "Oilers d'Edmonton" **/
 
-CREATE TABLE IF NOT EXISTs nhl_data.teamCommonName (
+CREATE TABLE IF NOT EXISTS nhl_data.teamCommonName (
     playerId INT REFERENCES players(playerId),
     language_code VARCHAR(10),
     team_name VARCHAR(100),
@@ -63,9 +63,49 @@ CREATE TABLE IF NOT EXISTS nhl_data.lastName (
     PRIMARY KEY (playerId, language_code),
 )
 
-/* Insert default: "Mcdavid" **/
+/* Insert default: "McDavid" **/
 
 CREATE TABLE IF NOT EXISTS nhl_data.badges (
     playerId INT REFERENCES players(playerId),
-    
+    badgeId INT,
+    PRIMARY KEY (playerId, badgeId),
+)
+
+CREATE TABLE IF NOT EXISTS nhl_data.logoURL (
+    badgeId INT REFERENCES badges(badgeId),
+    language_code VARCHAR(10),
+    logo_url VARCHAR(100),
+    PRIMARY KEY (badgeId, language_code),
+)
+
+CREATE TABLE IF NOT EXISTS nhl_data.badgetitle (
+    badgeId INT REFERENCES badges(badgeId),
+    language_code VARCHAR(10),
+    badge_title VARCHAR(100),
+    PRIMARY KEY (badgeId, language_code),
+)
+
+CREATE TABLE IF NOT EXISTS nhl_data.birthCity (
+    playerId INT REFERENCES players(playerId),
+    language_code VARCHAR(10),
+    city VARCHAR(100),
+    PRIMARY KEY (playerId, language_code),
+)
+
+CREATE TABLE IF NOT EXISTS nhl_data.birthStateProvince (
+    playerId INT REFERENCES players(playerId),
+    language_code VARCHAR(10),
+    stateProvince VARCHAR(100),
+    PRIMARY KEY (playerId, language_code),
+)
+
+CREATE TABLE IF NOT EXISTS nhl_data.draftDetails (
+    playerId INT REFERENCES players(playerId),
+    draftId INT,
+    year INT,
+    teamAbbrev VARCHAR(5),
+    round INT,
+    pickInRound INT,
+    overallPick INT,
+    PRIMARY KEY(playerId, draftId),
 )
