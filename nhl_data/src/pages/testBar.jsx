@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-function TestLine() {
+function TestBar() {
   const data = [
   {
     name: 'Page A',
@@ -70,4 +70,4 @@ function TestLine() {
   )
 }
 
-export default TestLine;
+export default TestBar;

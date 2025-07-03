@@ -11,7 +11,7 @@ import Teams from "./pages/teams";
 import Games from "./pages/games";
 import TestChart from "./pages/testChart";
 import TestCurl from "./pages/testCurl";
-import TestLine from "./pages/testLine";
+import TestBar from "./pages/testBar";
 
 function App() {
     return (
@@ -23,7 +23,7 @@ function App() {
                 <Route path="/teams" element={<Teams />} />
                 <Route path="/games" element={<Games />} />
                 <Route path="/testChart" element={<TestChart />} />
-                <Route path="/testLine" element={<TestLine />} />
+                <Route path="/testBar" element={<TestBar />} />
                 <Route path="/testCurl" element={<TestCurl />} />
             </Routes>
         </Router>
