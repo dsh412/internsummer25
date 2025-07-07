@@ -152,3 +152,8 @@ CREATE TABLE IF NOT EXISTS nhl_data.season (
 --     trophyId INT,
 
 -- )
+
+CREATE TABLE IF NOT EXISTS nhl_data.currentTeamRoster (
+    playerId INT REFERENCES players(playerId),
+    playerSlug VARCHAR(100) REFERENCES players(playerSlug),
+)
