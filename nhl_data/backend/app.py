@@ -3,6 +3,7 @@ from flask_cors import CORS
 import psycopg2
 from dotenv import load_dotenv
 import os
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -64,7 +65,7 @@ def get_pie():
     return jsonify(data)
 
 @app.route('/api/import')
-def get_data():
+def put_data():
     inputs = [ 
         "WPG", "WSH", "VGK", "TOR", "DAl", "LAK", "TBL", "COL", "EDM", "CAR", "FLA",
         "OTT", "MIN", "STL", "CGY", "NJD", "MTL", "VAN", "UTA", "CBJ", "DET", "NYR",
@@ -96,7 +97,39 @@ def get_data():
             if "id" in item:
                 ids.append(item["id"])
 
-        
+    for player in ids:
+        response = request.get(f"https://api-web.nhle.com/v1/player/{player}/landing")
+        response.raise_for_status()
+        data = response.json()
+
+        playerId = data.get("playerId")
+        isActive = data.get("isActive")
+        currentTeamId = data.get("currentTeamId")
+        currentTeamAbbrev = data.get("currentTeamAbbrev")
+        teamLogo = data.get("teamLogo")
+        sweaterNumber = data.get("sweaterNumber")
+        position = data.get("position")
+        headshot = data.get("headshot")
+        heroImage = data.get("heroImage")
+        heightInInches = data.get("heightInInches")
+        heighInCentimeters = data.get("heighInCentimeters")
+        weightInPounds = data.get("weightInPounds")
+        weightInKilograms = data.get("weightInKilograms")
+        birthDate = data.get("birthDate")
+        birthCountry = data.get("birthCountry")
+        shootsCatches = data.get("shootsCatches")
+        playerSlug = data.get("playerSlug")
+        inTop100AllTime = data.get("inTop100AllTime")
+        inHHOF = data.get("inHHOF")
+
+        sql = f"INSERT INTO nhl_data.players (playerId, isActive, currentTeamId, currentTeamAbbrev, 
+        teamLogo, sweaterNumber, position, headshot, heroImage, heightInInches, heightInCentimeters, 
+        weightInPounds, weightInKilograms, birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, 
+        inHHOF) VALUES ({playerId}, {isActive});"
+
+        cur = conn.cursor()
+        cur.execute(sql)
+        cur.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
