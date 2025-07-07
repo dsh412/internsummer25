@@ -63,5 +63,40 @@ def get_pie():
     cur.close()
     return jsonify(data)
 
+@app.route('/api/import')
+def get_data():
+    inputs = [ 
+        "WPG", "WSH", "VGK", "TOR", "DAl", "LAK", "TBL", "COL", "EDM", "CAR", "FLA",
+        "OTT", "MIN", "STL", "CGY", "NJD", "MTL", "VAN", "UTA", "CBJ", "DET", "NYR",
+        "NYI", "PIT", "ANA", "BUF", "SEA", "BOS", "PHI", "NSH", "CHI", "SJS"
+    ]
+
+    ids = []
+
+    for term in inputs:
+        response = requests.get(f"https://api-nhle.com/v1/roster/{term}/current")
+        response.raise_for_status()
+        data = response.json()
+
+        forwards = data.get("forwards", [])
+
+        for item in forwards:
+            if "id" in item:
+                ids.append(item["id"])
+
+        defensemen = data.get("defensemen", [])
+        
+        for item in defensemen:
+            if "id" in item:
+                ids.append(item["id"])
+
+        goalies = data.get("goalies", [])
+
+        for item in goalies:
+            if "id" in item:
+                ids.append(item["id"])
+
+        
+
 if __name__ == '__main__':
     app.run(debug=True)
