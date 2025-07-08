@@ -75,7 +75,7 @@ def put_data():
     ids = []
 
     for term in inputs:
-        response = requests.get(f"https://api-nhle.com/v1/roster/{term}/current")
+        response = requests.get(f"https://api-web.nhle.com/v1/roster/{term}/current")
         response.raise_for_status()
         data = response.json()
 
@@ -98,41 +98,46 @@ def put_data():
                 ids.append(item["id"])
 
     for player in ids:
-        response = request.get(f"https://api-web.nhle.com/v1/player/{player}/landing")
+        response = requests.get(f"https://api-web.nhle.com/v1/player/{player}/landing")
         response.raise_for_status()
         data = response.json()
 
-        playerId = data.get("playerId")
-        isActive = data.get("isActive")
-        currentTeamId = data.get("currentTeamId")
-        currentTeamAbbrev = data.get("currentTeamAbbrev")
-        teamLogo = data.get("teamLogo")
-        sweaterNumber = data.get("sweaterNumber")
-        position = data.get("position")
-        headshot = data.get("headshot")
-        heroImage = data.get("heroImage")
-        heightInInches = data.get("heightInInches")
-        heightInCentimeters = data.get("heightInCentimeters")
-        weightInPounds = data.get("weightInPounds")
-        weightInKilograms = data.get("weightInKilograms")
-        birthDate = data.get("birthDate")
-        birthCountry = data.get("birthCountry")
-        shootsCatches = data.get("shootsCatches")
-        playerSlug = data.get("playerSlug")
-        inTop100AllTime = data.get("inTop100AllTime")
-        inHHOF = data.get("inHHOF")
-
-        sql = """
-            INSERT INTO nhl_data.players (playerId, isActive, currentTeamId, currentTeamAbbrev, 
-            teamLogo, sweaterNumber, position, headshot, heroImage, heightInInches, heightInCentimeters, 
-            weightInPounds, weightInKilograms, birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, 
-            inHHOF) VALUES ({playerId}, {isActive}, {currentTeamId}, '{currentTeamAbbrev}', '{teamLogo}', {sweaterNumber}, 
-            '{position}','{headshot}', '{heroImage}', {heightInInches}, {heightInCentimeters}, {weightInPounds}, {weightInKilograms},
-            '{birthDate}', '{birthCountry}', '{shootsCatches}', '{playerSlug}', {inTop100AllTime}, {inHHOF});
-            """
+        values = (
+            data.get("playerId"),
+            data.get("isActive"),
+            data.get("currentTeamId"),
+            data.get("currentTeamAbbrev"),
+            data.get("teamLogo"),
+            data.get("sweaterNumber"),
+            data.get("position"),
+            data.get("headshot"),
+            data.get("heroImage"),
+            data.get("heightInInches"),
+            data.get("heightInCentimeters"),
+            data.get("weightInPounds"),
+            data.get("weightInKilograms"),
+            data.get("birthDate"),
+            data.get("birthCountry"),
+            data.get("shootsCatches"),
+            data.get("playerSlug"),
+            data.get("inTop100AllTime"),
+            data.get("inHHOF")
+        )
 
         cur = conn.cursor()
-        cur.execute(sql)
+
+        cur.execute("""
+            INSERT INTO nhl_data.players (
+                playerId, isActive, currentTeamId, currentTeamAbbrev, 
+                teamLogo, sweaterNumber, position, headshot, heroImage, heightInInches, heightInCentimeters, 
+                weightInPounds, weightInKilograms, birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, 
+                inHHOF
+            ) VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            );
+            """, values)
+
+        conn.commit()
         cur.close()
 
 if __name__ == '__main__':
