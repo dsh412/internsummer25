@@ -112,7 +112,7 @@ def put_data():
         headshot = data.get("headshot")
         heroImage = data.get("heroImage")
         heightInInches = data.get("heightInInches")
-        heighInCentimeters = data.get("heighInCentimeters")
+        heightInCentimeters = data.get("heightInCentimeters")
         weightInPounds = data.get("weightInPounds")
         weightInKilograms = data.get("weightInKilograms")
         birthDate = data.get("birthDate")
@@ -125,7 +125,9 @@ def put_data():
         sql = f"INSERT INTO nhl_data.players (playerId, isActive, currentTeamId, currentTeamAbbrev, 
         teamLogo, sweaterNumber, position, headshot, heroImage, heightInInches, heightInCentimeters, 
         weightInPounds, weightInKilograms, birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, 
-        inHHOF) VALUES ({playerId}, {isActive});"
+        inHHOF) VALUES ({playerId}, {isActive}, {currentTeamId}, '{currentTeamAbbrev}', '{teamLogo}', {sweaterNumber}, 
+        '{position}','{headshot}', '{heroImage}', {heightInInches}, {heightInCentimeters}, {weightInPounds}, {weightInKilograms},
+        '{birthDate}', '{birthCountry}', '{shootsCatches}', '{playerSlug}', {inTop100AllTime}, {inHHOF});"
 
         cur = conn.cursor()
         cur.execute(sql)
