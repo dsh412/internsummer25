@@ -122,12 +122,14 @@ def put_data():
         inTop100AllTime = data.get("inTop100AllTime")
         inHHOF = data.get("inHHOF")
 
-        sql = f"INSERT INTO nhl_data.players (playerId, isActive, currentTeamId, currentTeamAbbrev, 
-        teamLogo, sweaterNumber, position, headshot, heroImage, heightInInches, heightInCentimeters, 
-        weightInPounds, weightInKilograms, birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, 
-        inHHOF) VALUES ({playerId}, {isActive}, {currentTeamId}, '{currentTeamAbbrev}', '{teamLogo}', {sweaterNumber}, 
-        '{position}','{headshot}', '{heroImage}', {heightInInches}, {heightInCentimeters}, {weightInPounds}, {weightInKilograms},
-        '{birthDate}', '{birthCountry}', '{shootsCatches}', '{playerSlug}', {inTop100AllTime}, {inHHOF});"
+        sql = """
+            INSERT INTO nhl_data.players (playerId, isActive, currentTeamId, currentTeamAbbrev, 
+            teamLogo, sweaterNumber, position, headshot, heroImage, heightInInches, heightInCentimeters, 
+            weightInPounds, weightInKilograms, birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, 
+            inHHOF) VALUES ({playerId}, {isActive}, {currentTeamId}, '{currentTeamAbbrev}', '{teamLogo}', {sweaterNumber}, 
+            '{position}','{headshot}', '{heroImage}', {heightInInches}, {heightInCentimeters}, {weightInPounds}, {weightInKilograms},
+            '{birthDate}', '{birthCountry}', '{shootsCatches}', '{playerSlug}', {inTop100AllTime}, {inHHOF});
+            """
 
         cur = conn.cursor()
         cur.execute(sql)
