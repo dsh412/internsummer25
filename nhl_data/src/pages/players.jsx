@@ -8,7 +8,7 @@ function Players() {
     const [primary_position, setPosition] = useState('');
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/import')
+        axios.get('http://localhost:5000/api/players')
             .then(res => setPlayers(res.data))
             .catch(err => console.error(err));
     }, []);
