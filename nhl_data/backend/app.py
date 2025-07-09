@@ -64,111 +64,6 @@ def get_pie():
     cur.close()
     return jsonify(data)
 
-# def player(playerId, isActive, currentTeamId, currentTeamAbbrev, teamLogo, sweaterNumber, position, headshot, heroImage, heightInInches, heightInCentimeters, weightInPounds, weightInKilograms, birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, inHHOF):
-#     playerId.isActive = isActive
-#     playerId.currentTeamId = currentTeamId
-#     playerId.currentTeamAbbrev = currentTeamAbbrev
-#     playerId.teamLogo = teamLogo
-#     playerId.sweaterNumber = sweaterNumber
-#     playerId.position = position
-#     playerId.headshot = headshot
-#     playerId.heroImage = heroImage
-#     playerId.heightInInches = heightInInches
-#     playerId.heightInCentimeters = heightInCentimeters
-#     playerId.weightInPounds = weightInPounds
-#     playerId.weightInKilograms = weightInKilograms
-#     playerId.birthDate = birthDate
-#     playerId.birthCountry = birthCountry
-#     playerId.shootsCatches = shootsCatches
-#     playerId.playerSlug = playerSlug
-#     playerId.inTop100AllTime = inTop100AllTime
-#     playerId.inHHOF = inHHOF
-
-# @app.route('/api/import')
-# def put_data():
-#     inputs = [ 
-#         "WPG", "WSH", "VGK", "TOR", "DAl", "LAK", "TBL", "COL", "EDM", "CAR", "FLA",
-#         "OTT", "MIN", "STL", "CGY", "NJD", "MTL", "VAN", "UTA", "CBJ", "DET", "NYR",
-#         "NYI", "PIT", "ANA", "BUF", "SEA", "BOS", "PHI", "NSH", "CHI", "SJS"
-#     ]
-
-#     ids = []
-#     players = []
-
-#     for term in inputs:
-#         response = requests.get(f"https://api-web.nhle.com/v1/roster/{term}/current")
-#         response.raise_for_status()
-#         data = response.json()
-
-#         forwards = data.get("forwards", [])
-
-#         for item in forwards:
-#             if "id" in item:
-#                 ids.append(item["id"])
-
-#         defensemen = data.get("defensemen", [])
-        
-#         for item in defensemen:
-#             if "id" in item:
-#                 ids.append(item["id"])
-
-#         goalies = data.get("goalies", [])
-
-#         for item in goalies:
-#             if "id" in item:
-#                 ids.append(item["id"])
-
-#     for item in ids:
-#         response = requests.get(f"https://api-web.nhle.com/v1/player/{item}/landing")
-#         response.raise_for_status()
-#         data = response.json()
-
-#         values = (
-#             data.get("playerId"),
-#             data.get("isActive"),
-#             data.get("currentTeamId"),
-#             data.get("currentTeamAbbrev"),
-#             data.get("teamLogo"),
-#             data.get("sweaterNumber"),
-#             data.get("position"),
-#             data.get("headshot"),
-#             data.get("heroImage"),
-#             data.get("heightInInches"),
-#             data.get("heightInCentimeters"),
-#             data.get("weightInPounds"),
-#             data.get("weightInKilograms"),
-#             data.get("birthDate"),
-#             data.get("birthCountry"),
-#             data.get("shootsCatches"),
-#             data.get("playerSlug"),
-#             data.get("inTop100AllTime"),
-#             data.get("inHHOF")
-#         )
-
-#         player = new Player(data.get("playerId"), data.get("isActive"), data.get("currentTeamId"), data.get("currentTeamAbbrev"), data.get("teamLogo"), data.get("sweaterNumber"), data.get("position"), data.get("headshot"), 
-#             data.get("heroImage"), data.get("heightInInches"), data.get("heightInCentimeters"), data.get("weightInPounds"), data.get("weightInKilograms"), data.get("birthDate"), data.get("birthCountry"), 
-#             data.get("shootsCatches"), data.get("playerSlug"), data.get("inTop100AllTime"), data.get("inHHOF"))
-
-#         players.append(player)
-    
-#     for player in players:
-#         cur = conn.cursor()
-
-#         cur.execute("""
-#             INSERT INTO nhl_data.players (
-#                 playerId, isActive, currentTeamId, currentTeamAbbrev, 
-#                 teamLogo, sweaterNumber, position, headshot, heroImage, heightInInches, heightInCentimeters, 
-#                 weightInPounds, weightInKilograms, birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, 
-#                 inHHOF
-#             ) VALUES (
-#                 %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
-#             );
-#             """, player)
-
-#         conn.commit()
-#         cur.close()
-
-
 class Player:
     def __init__(self, data):
         self.playerId = data.get("playerId")
@@ -242,6 +137,12 @@ def put_data():
     cur.close()
 
     return {"status": "success", "players_imported": len(players)}
+
+@app.route('/api/g')
+def put_games():
+    res = requests.get(f"https://api.nhle.com/stats/rest/en/game")
+    data = res.json
+    return data
 
 if __name__ == '__main__':
     app.run(debug=True)
