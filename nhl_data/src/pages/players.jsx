@@ -20,7 +20,7 @@ function Players() {
             .includes(search.toLowerCase());
 
         const matchesPosition = primary_position
-            ? player.primary_position?.toLowerCase() === primary_position.toLowerCase()
+            ? player.position?.toLowerCase() === primary_position.toLowerCase()
             : true;
 
     return matchesSearch && matchesPosition;
@@ -46,8 +46,8 @@ function Players() {
             className="p-2 border rounded"
         >
             <option value="">All Positions</option>
-            <option value="RW">Right Wing</option>
-            <option value="LW">Left Wing</option>
+            <option value="R">Right Wing</option>
+            <option value="L">Left Wing</option>
             <option value="C">Center</option>
             <option value="D">Defense</option>
             <option value="G">Goalie</option>
