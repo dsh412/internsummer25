@@ -95,7 +95,7 @@ class Player:
             self.inTop100AllTime, self.inHHOF
         )
 
-@app.route('/api/import')
+@app.route('/api/import/players')
 def put_data():
     teams = [
         "WPG", "WSH", "VGK", "TOR", "DAl", "LAK", "TBL", "COL", "EDM", "CAR", "FLA",
@@ -138,7 +138,7 @@ def put_data():
 
     return {"status": "success", "players_imported": len(players)}
 
-@app.route('/api/g')
+@app.route('/api/import/games')
 def put_games():
     res = requests.get(f"https://api.nhle.com/stats/rest/en/game")
     data = res.json
