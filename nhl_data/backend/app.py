@@ -190,8 +190,46 @@ def put_games():
 
     return {"status": "success", "games_imported": len(games)}
 
+class Team:
+    def __intit__(self, data):
+        self.id = data.get("id")
+        self.franchise = data.get("franchise")
+        self.fullName = data.get("fullName")
+        self.leagueId = data.get("leagueId")
+        self.rawTricode = data.get("rawTricode")
+        self.tricode = data.get("tricode")        
+    
+    def to_tuple(self):
+        return (
+            self.id, self.franchise, self.fullName, self.leagueId, self.rawTricode, self.tricode
+        )
+
 @app.route('/api/import/teams')
 def put_teams():
     res = requests.get(f"https://api.nhle.com/stats/rest/en/players")
+    res.raise_for_status()
+    team_data = res.json()
+
+    teams = []
+
+    for team_item in team_data.get("data", []):
+        teams.append(Team(team_item))
+
+    cur = conn.cursor()
+
+    for t in teams:
+        cur.execute("""
+            INSERT INTO nhl_data.teams (
+                id, farnchiseId, fullName, leagueId,
+                rawTricode, tricode 
+            ) VALUES (%s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO NOTHING
+        """, t.to_tuple())
+    
+    conn.commit()
+    conn.close()
+
+    return {"status": "success", "teams_imported": len(teams)}
+
 if __name__ == '__main__':
     app.run(debug=True)
