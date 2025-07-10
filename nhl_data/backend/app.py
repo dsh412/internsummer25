@@ -193,15 +193,15 @@ def put_games():
 class Team:
     def __init__(self, data):
         self.id = data.get("id")
-        self.franchise = data.get("franchise")
+        self.franchiseId = data.get("franchiseId")
         self.fullName = data.get("fullName")
         self.leagueId = data.get("leagueId")
         self.rawTricode = data.get("rawTricode")
-        self.tricode = data.get("tricode")        
+        self.triCode = data.get("triCode")        
     
     def to_tuple(self):
         return (
-            self.id, self.franchise, self.fullName, self.leagueId, self.rawTricode, self.tricode
+            self.id, self.franchiseId, self.fullName, self.leagueId, self.rawTricode, self.triCode
         )
 
 @app.route('/api/import/teams')
@@ -221,7 +221,7 @@ def put_teams():
         cur.execute("""
             INSERT INTO nhl_data.teams (
                 id, franchiseId, fullName, leagueId,
-                rawTricode, tricode 
+                rawTricode, triCode 
             ) VALUES (%s, %s, %s, %s, %s, %s)
             ON CONFLICT (id) DO NOTHING
         """, t.to_tuple())
