@@ -158,8 +158,8 @@ CREATE TABLE IF NOT EXISTS nhl_data.currentTeamRoster (
     playerSlug VARCHAR(100) REFERENCES players(playerSlug),
 )
 
-CREATE TABLE IF NOT EXISTS nhl_data.teams (
-    teamId INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS nhl_data.games (
+    id INT PRIMARY KEY,
     easternStartTime DATE,
     gameDate VARCHAR(20),
     gameNumber INT,
