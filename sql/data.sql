@@ -173,3 +173,12 @@ CREATE TABLE IF NOT EXISTS nhl_data.games (
     visitingScore INT,
     visitingTeamId INT
 )
+
+CREATE TABLE IF NOT EXISTS nhl_data.teams (
+    id INT PRIMARY KEY,
+    franchiseId INT,
+    fullName VARCHAR(100),
+    leagueId INT,
+    rawTricode VARCHAR(10),
+    triCode VARCHAR(10)
+)
