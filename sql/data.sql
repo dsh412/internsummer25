@@ -157,3 +157,19 @@ CREATE TABLE IF NOT EXISTS nhl_data.currentTeamRoster (
     playerId INT REFERENCES players(playerId),
     playerSlug VARCHAR(100) REFERENCES players(playerSlug),
 )
+
+CREATE TABLE IF NOT EXISTS nhl_data.teams (
+    teamId INT PRIMARY KEY,
+    easternStartTime DATE,
+    gameDate VARCHAR(20),
+    gameNumber INT,
+    gameScheduleStateId INT,
+    gameStateId INT,
+    gameType INT,
+    homeScore INT,
+    homeTeamId INT,
+    period INT,
+    season INT,
+    visitingScore INT,
+    visitingTeamId INT,
+)
