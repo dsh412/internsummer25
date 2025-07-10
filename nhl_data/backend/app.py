@@ -131,6 +131,7 @@ def put_data():
                 heightInInches, heightInCentimeters, weightInPounds, weightInKilograms, 
                 birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, inHHOF
             ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (playerId) DO NOTHING
         """, p.to_tuple())
 
     conn.commit()
@@ -140,8 +141,8 @@ def put_data():
 
 class Game:
     def __init__(self, data):
-        self.teamId = data.get("teamId")
-        self.easternStartTime = data.get("easternStateTime")
+        self.id = data.get("id")
+        self.easternStartTime = data.get("easternStartTime")
         self.gameDate = data.get("gameDate")
         self.gameNumber = data.get("gameNumber")
         self.gameScheduleStateId = data.get("gameScheduleStateId")
@@ -156,29 +157,33 @@ class Game:
 
     def to_tuple(self):
         return (
-            self.teamId, self.easternStartTime, self.gameDate, self.gameNumber,
+            self.id, self.easternStartTime, self.gameDate, self.gameNumber,
             self.gameScheduleStateId, self.gameStateId, self.gameType, self.homeScore,
             self.homeTeamId, self.period, self.season, self.visitingScore, self.visitingTeamId
         )
 
 @app.route('/api/import/games')
 def put_games():
-    games = []
-
     res = requests.get(f"https://api.nhle.com/stats/rest/en/game")
     res.raise_for_status()
     game_data = res.json()
-    games.append(Game(game_data))
+
+    games = []
+    
+    for game_item in game_data.get("data", []):
+        games.append(Game(game_item))
 
     cur = conn.cursor()
+
     for g in games:
         cur.execute("""
-        INSERT INTO nhl_data.teams (
-        teamId, easternStartTime, gameDate, gameNumber,
-        gameScheduleStateId, gameStateId, gameType, homeScore,
-        homeTeamId, period, season, visitingScore, visitingTeamId 
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-    """, g.to_tuple())
+            INSERT INTO nhl_data.games (
+                id, easternStartTime, gameDate, gameNumber,
+                gameScheduleStateId, gameStateId, gameType, homeScore,
+                homeTeamId, period, season, visitingScore, visitingTeamId 
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO NOTHING
+        """, g.to_tuple())
 
     conn.commit()
     cur.close()
