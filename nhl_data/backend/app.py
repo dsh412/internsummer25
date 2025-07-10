@@ -190,5 +190,8 @@ def put_games():
 
     return {"status": "success", "games_imported": len(games)}
 
+@app.route('/api/import/teams')
+def put_teams():
+    res = requests.get(f"https://api.nhle.com/stats/rest/en/players")
 if __name__ == '__main__':
     app.run(debug=True)
