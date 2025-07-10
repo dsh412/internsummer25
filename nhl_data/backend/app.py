@@ -138,11 +138,52 @@ def put_data():
 
     return {"status": "success", "players_imported": len(players)}
 
+class Game:
+    def __init__(self, data):
+        self.teamId = data.get("teamId")
+        self.easternStartTime = data.get("easternStateTime")
+        self.gameDate = data.get("gameDate")
+        self.gameNumber = data.get("gameNumber")
+        self.gameScheduleStateId = data.get("gameScheduleStateId")
+        self.gameStateId = data.get("gameStateId")
+        self.gameType = data.get("gameType")
+        self.homeScore = data.get("homeScore")
+        self.homeTeamId = data.get("homeTeamId")
+        self.period = data.get("period")
+        self.season = data.get("season")
+        self.visitingScore = data.get("visitingScore")
+        self.visitingTeamId = data.get("visitingTeamId")
+
+    def to_tuple(self):
+        return (
+            self.teamId, self.easternStartTime, self.gameDate, self.gameNumber,
+            self.gameScheduleStateId, self.gameStateId, self.gameType, self.homeScore,
+            self.homeTeamId, self.period, self.season, self.visitingScore, self.visitingTeamId
+        )
+
 @app.route('/api/import/games')
 def put_games():
+    games = []
+
     res = requests.get(f"https://api.nhle.com/stats/rest/en/game")
-    data = res.json
-    return data
+    res.raise_for_status()
+    game_data = res.json()
+    games.append(Game(game_data))
+
+    cur = conn.cursor()
+    for g in games:
+        cur.execute("""
+        INSERT INTO nhl_data.teams (
+        teamId, easternStartTime, gameDate, gameNumber,
+        gameScheduleStateId, gameStateId, gameType, homeScore,
+        homeTeamId, period, season, visitingScore, visitingTeamId 
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """, g.to_tuple())
+
+    conn.commit()
+    cur.close()
+
+    return {"status": "success", "games_imported": len(games)}
 
 if __name__ == '__main__':
     app.run(debug=True)
