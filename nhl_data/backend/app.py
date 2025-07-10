@@ -191,7 +191,7 @@ def put_games():
     return {"status": "success", "games_imported": len(games)}
 
 class Team:
-    def __intit__(self, data):
+    def __init__(self, data):
         self.id = data.get("id")
         self.franchise = data.get("franchise")
         self.fullName = data.get("fullName")
@@ -206,7 +206,7 @@ class Team:
 
 @app.route('/api/import/teams')
 def put_teams():
-    res = requests.get(f"https://api.nhle.com/stats/rest/en/players")
+    res = requests.get(f"https://api.nhle.com/stats/rest/en/team")
     res.raise_for_status()
     team_data = res.json()
 
@@ -220,7 +220,7 @@ def put_teams():
     for t in teams:
         cur.execute("""
             INSERT INTO nhl_data.teams (
-                id, farnchiseId, fullName, leagueId,
+                id, franchiseId, fullName, leagueId,
                 rawTricode, tricode 
             ) VALUES (%s, %s, %s, %s, %s, %s)
             ON CONFLICT (id) DO NOTHING
