@@ -64,76 +64,172 @@ def get_pie():
     cur.close()
     return jsonify(data)
 
-@app.route('/api/import')
+class Player:
+    def __init__(self, data):
+        self.playerId = data.get("playerId")
+        self.isActive = data.get("isActive")
+        self.currentTeamId = data.get("currentTeamId")
+        self.currentTeamAbbrev = data.get("currentTeamAbbrev")
+        self.teamLogo = data.get("teamLogo")
+        self.sweaterNumber = data.get("sweaterNumber")
+        self.position = data.get("position")
+        self.headshot = data.get("headshot")
+        self.heroImage = data.get("heroImage")
+        self.heightInInches = data.get("heightInInches")
+        self.heightInCentimeters = data.get("heightInCentimeters")
+        self.weightInPounds = data.get("weightInPounds")
+        self.weightInKilograms = data.get("weightInKilograms")
+        self.birthDate = data.get("birthDate")
+        self.birthCountry = data.get("birthCountry")
+        self.shootsCatches = data.get("shootsCatches")
+        self.playerSlug = data.get("playerSlug")
+        self.inTop100AllTime = data.get("inTop100AllTime")
+        self.inHHOF = data.get("inHHOF")
+
+    def to_tuple(self):
+        return (
+            self.playerId, self.isActive, self.currentTeamId, self.currentTeamAbbrev,
+            self.teamLogo, self.sweaterNumber, self.position, self.headshot, self.heroImage,
+            self.heightInInches, self.heightInCentimeters, self.weightInPounds, self.weightInKilograms,
+            self.birthDate, self.birthCountry, self.shootsCatches, self.playerSlug,
+            self.inTop100AllTime, self.inHHOF
+        )
+
+@app.route('/api/import/players')
 def put_data():
-    inputs = [ 
+    teams = [
         "WPG", "WSH", "VGK", "TOR", "DAl", "LAK", "TBL", "COL", "EDM", "CAR", "FLA",
         "OTT", "MIN", "STL", "CGY", "NJD", "MTL", "VAN", "UTA", "CBJ", "DET", "NYR",
         "NYI", "PIT", "ANA", "BUF", "SEA", "BOS", "PHI", "NSH", "CHI", "SJS"
     ]
 
-    ids = []
+    player_ids = []
 
-    for term in inputs:
-        response = requests.get(f"https://api-nhle.com/v1/roster/{term}/current")
-        response.raise_for_status()
-        data = response.json()
+    for team in teams:
+        res = requests.get(f"https://api-web.nhle.com/v1/roster/{team}/current")
+        res.raise_for_status()
+        data = res.json()
 
-        forwards = data.get("forwards", [])
+        for group in ["forwards", "defensemen", "goalies"]:
+            player_ids.extend([p["id"] for p in data.get(group, []) if "id" in p])
 
-        for item in forwards:
-            if "id" in item:
-                ids.append(item["id"])
+    players = []
 
-        defensemen = data.get("defensemen", [])
-        
-        for item in defensemen:
-            if "id" in item:
-                ids.append(item["id"])
+    for pid in player_ids:
+        res = requests.get(f"https://api-web.nhle.com/v1/player/{pid}/landing")
+        res.raise_for_status()
+        player_data = res.json()
+        players.append(Player(player_data))
 
-        goalies = data.get("goalies", [])
+    cur = conn.cursor()
 
-        for item in goalies:
-            if "id" in item:
-                ids.append(item["id"])
+    for p in players:
+        cur.execute("""
+            INSERT INTO nhl_data.players (
+                playerId, isActive, currentTeamId, currentTeamAbbrev,
+                teamLogo, sweaterNumber, position, headshot, heroImage, 
+                heightInInches, heightInCentimeters, weightInPounds, weightInKilograms, 
+                birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, inHHOF
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (playerId) DO NOTHING
+        """, p.to_tuple())
 
-    for player in ids:
-        response = request.get(f"https://api-web.nhle.com/v1/player/{player}/landing")
-        response.raise_for_status()
-        data = response.json()
+    conn.commit()
+    cur.close()
 
-        playerId = data.get("playerId")
-        isActive = data.get("isActive")
-        currentTeamId = data.get("currentTeamId")
-        currentTeamAbbrev = data.get("currentTeamAbbrev")
-        teamLogo = data.get("teamLogo")
-        sweaterNumber = data.get("sweaterNumber")
-        position = data.get("position")
-        headshot = data.get("headshot")
-        heroImage = data.get("heroImage")
-        heightInInches = data.get("heightInInches")
-        heightInCentimeters = data.get("heightInCentimeters")
-        weightInPounds = data.get("weightInPounds")
-        weightInKilograms = data.get("weightInKilograms")
-        birthDate = data.get("birthDate")
-        birthCountry = data.get("birthCountry")
-        shootsCatches = data.get("shootsCatches")
-        playerSlug = data.get("playerSlug")
-        inTop100AllTime = data.get("inTop100AllTime")
-        inHHOF = data.get("inHHOF")
+    return {"status": "success", "players_imported": len(players)}
 
-        sql = """
-            INSERT INTO nhl_data.players (playerId, isActive, currentTeamId, currentTeamAbbrev, 
-            teamLogo, sweaterNumber, position, headshot, heroImage, heightInInches, heightInCentimeters, 
-            weightInPounds, weightInKilograms, birthDate, birthCountry, shootsCatches, playerSlug, inTop100AllTime, 
-            inHHOF) VALUES ({playerId}, {isActive}, {currentTeamId}, '{currentTeamAbbrev}', '{teamLogo}', {sweaterNumber}, 
-            '{position}','{headshot}', '{heroImage}', {heightInInches}, {heightInCentimeters}, {weightInPounds}, {weightInKilograms},
-            '{birthDate}', '{birthCountry}', '{shootsCatches}', '{playerSlug}', {inTop100AllTime}, {inHHOF});
-            """
+class Game:
+    def __init__(self, data):
+        self.id = data.get("id")
+        self.easternStartTime = data.get("easternStartTime")
+        self.gameDate = data.get("gameDate")
+        self.gameNumber = data.get("gameNumber")
+        self.gameScheduleStateId = data.get("gameScheduleStateId")
+        self.gameStateId = data.get("gameStateId")
+        self.gameType = data.get("gameType")
+        self.homeScore = data.get("homeScore")
+        self.homeTeamId = data.get("homeTeamId")
+        self.period = data.get("period")
+        self.season = data.get("season")
+        self.visitingScore = data.get("visitingScore")
+        self.visitingTeamId = data.get("visitingTeamId")
 
-        cur = conn.cursor()
-        cur.execute(sql)
-        cur.close()
+    def to_tuple(self):
+        return (
+            self.id, self.easternStartTime, self.gameDate, self.gameNumber,
+            self.gameScheduleStateId, self.gameStateId, self.gameType, self.homeScore,
+            self.homeTeamId, self.period, self.season, self.visitingScore, self.visitingTeamId
+        )
+
+@app.route('/api/import/games')
+def put_games():
+    res = requests.get(f"https://api.nhle.com/stats/rest/en/game")
+    res.raise_for_status()
+    game_data = res.json()
+
+    games = []
+    
+    for game_item in game_data.get("data", []):
+        games.append(Game(game_item))
+
+    cur = conn.cursor()
+
+    for g in games:
+        cur.execute("""
+            INSERT INTO nhl_data.games (
+                id, easternStartTime, gameDate, gameNumber,
+                gameScheduleStateId, gameStateId, gameType, homeScore,
+                homeTeamId, period, season, visitingScore, visitingTeamId 
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO NOTHING
+        """, g.to_tuple())
+
+    conn.commit()
+    cur.close()
+
+    return {"status": "success", "games_imported": len(games)}
+
+class Team:
+    def __init__(self, data):
+        self.id = data.get("id")
+        self.franchiseId = data.get("franchiseId")
+        self.fullName = data.get("fullName")
+        self.leagueId = data.get("leagueId")
+        self.rawTricode = data.get("rawTricode")
+        self.triCode = data.get("triCode")        
+    
+    def to_tuple(self):
+        return (
+            self.id, self.franchiseId, self.fullName, self.leagueId, self.rawTricode, self.triCode
+        )
+
+@app.route('/api/import/teams')
+def put_teams():
+    res = requests.get(f"https://api.nhle.com/stats/rest/en/team")
+    res.raise_for_status()
+    team_data = res.json()
+
+    teams = []
+
+    for team_item in team_data.get("data", []):
+        teams.append(Team(team_item))
+
+    cur = conn.cursor()
+
+    for t in teams:
+        cur.execute("""
+            INSERT INTO nhl_data.teams (
+                id, franchiseId, fullName, leagueId,
+                rawTricode, triCode 
+            ) VALUES (%s, %s, %s, %s, %s, %s)
+            ON CONFLICT (id) DO NOTHING
+        """, t.to_tuple())
+    
+    conn.commit()
+    conn.close()
+
+    return {"status": "success", "teams_imported": len(teams)}
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -17,41 +17,41 @@ CREATE TABLE IF NOT EXISTS nhl_data.players (
     shootsCatches VARCHAR(5),
     playerSlug VARCHAR(100),
     inTop100AllTime INT,
-    inHHOF INT,
+    inHHOF INT
 )
 
 -- CREATE TABLE IF NOT EXISTS nhl_data.badges (
 --     playerId INT REFERENCES players(playerId),
 --     badgeId INT,
---     PRIMARY KEY (playerId, badgeId),
+--     PRIMARY KEY (playerId, badgeId)
 -- )
 
 -- CREATE TABLE IF NOT EXISTS nhl_data.logoURL (
 --     badgeId INT REFERENCES badges(badgeId),
 --     language_code VARCHAR(10),
 --     logo_url VARCHAR(100),
---     PRIMARY KEY (badgeId, language_code),
+--     PRIMARY KEY (badgeId, language_code)
 -- )
 
 -- CREATE TABLE IF NOT EXISTS nhl_data.badgetitle (
 --     badgeId INT REFERENCES badges(badgeId),
 --     language_code VARCHAR(10),
 --     badge_title VARCHAR(100),
---     PRIMARY KEY (badgeId, language_code),
+--     PRIMARY KEY (badgeId, language_code)
 -- )
 
 CREATE TABLE IF NOT EXISTS nhl_data.birthCity (
     playerId INT REFERENCES players(playerId),
     language_code VARCHAR(10),
     city VARCHAR(100),
-    PRIMARY KEY (playerId, language_code),
+    PRIMARY KEY (playerId, language_code)
 )
 
 CREATE TABLE IF NOT EXISTS nhl_data.birthStateProvince (
     playerId INT REFERENCES players(playerId),
     language_code VARCHAR(10),
     stateProvince VARCHAR(100),
-    PRIMARY KEY (playerId, language_code),
+    PRIMARY KEY (playerId, language_code)
 )
 
 CREATE TABLE IF NOT EXISTS nhl_data.draftDetails (
@@ -62,13 +62,13 @@ CREATE TABLE IF NOT EXISTS nhl_data.draftDetails (
     round INT,
     pickInRound INT,
     overallPick INT,
-    PRIMARY KEY (playerId, draftId),
+    PRIMARY KEY (playerId, draftId)
 )
 
 CREATE TABLE IF NOT EXISTS nhl_data.careerTotals (
     playerId INT REFERENCES players(playerId),
     careerId INT,
-    PRIMARY KEY (playerId, careerId),
+    PRIMARY KEY (playerId, careerId)
 )
 
 CREATE TABLE IF NOT EXISTS nhl_data.careerRegularSeason (
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS nhl_data.careerRegularSeason (
     shothandedGoals INT,
     shothandedPoints INT,
     shots INT,
-    PRIMARY KEY (careerId, careerRegularId),
+    PRIMARY KEY (careerId, careerRegularId)
 )
 
 CREATE TABLE IF NOT EXISTS nhl_data.careerPlayoffsSeason (
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS nhl_data.careerPlayoffsSeason (
     shothandedGoals INT,
     shothandedPoints INT,
     shots INT,
-    PRIMARY KEY (careerId, careerPlayoffId),   
+    PRIMARY KEY (careerId, careerPlayoffId)   
 )
 
 -- CREATE TABLE IF NOT EXISTS nhl_data.last5Games (
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS nhl_data.careerPlayoffsSeason (
 CREATE TABLE IF NOT EXISTS nhl_data.seasonTotals (
     playerId INT REFERENCES players(playerId),
     seasonTotalId INT,
-    PRIMARY KEY (playerId, seasonTotalId),
+    PRIMARY KEY (playerId, seasonTotalId)
 )
 
 CREATE TABLE IF NOT EXISTS nhl_data.season (
@@ -138,22 +138,47 @@ CREATE TABLE IF NOT EXISTS nhl_data.season (
     season INT,
     sequence INT,
     teamName VARCHAR(100)
-    PRIMARY KEY (seasonTotalId, season),
+    PRIMARY KEY (seasonTotalId, season)
 )
 
 -- CREATE TABLE IF NOT EXISTS nhl_data.awards (
 --     playerId INT REFERENCES players(playerId),
 --     awardsId INT,
---     PRIMARY KEY (playerId, awardsId),
+--     PRIMARY KEY (playerId, awardsId)
 -- )
 
 -- CREATE TABLE IF NOT EXISTS nhl_data.trophy (
 --     awardsId INT REFERENCES awards(awardsId),
---     trophyId INT,
+--     trophyId INT
 
 -- )
 
 CREATE TABLE IF NOT EXISTS nhl_data.currentTeamRoster (
     playerId INT REFERENCES players(playerId),
     playerSlug VARCHAR(100) REFERENCES players(playerSlug),
+)
+
+CREATE TABLE IF NOT EXISTS nhl_data.games (
+    id INT PRIMARY KEY,
+    easternStartTime DATE,
+    gameDate VARCHAR(20),
+    gameNumber INT,
+    gameScheduleStateId INT,
+    gameStateId INT,
+    gameType INT,
+    homeScore INT,
+    homeTeamId INT,
+    period INT,
+    season INT,
+    visitingScore INT,
+    visitingTeamId INT
+)
+
+CREATE TABLE IF NOT EXISTS nhl_data.teams (
+    id INT PRIMARY KEY,
+    franchiseId INT,
+    fullName VARCHAR(100),
+    leagueId INT,
+    rawTricode VARCHAR(10),
+    triCode VARCHAR(10)
 )
