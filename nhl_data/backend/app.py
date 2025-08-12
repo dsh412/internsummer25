@@ -42,6 +42,20 @@ def get_players():
     cur.close()
     return jsonify(data)
 
+@app.route('/api/player/<int:player_id>')
+def get_player(player_id):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM nhl_data.players WHERE id = %s;", (player_id,))
+    row = cur.fetchone()
+    columns = [desc[0] for desc in cur.description]
+    cur.close()
+    
+    if not row:
+        return jsonify({"error": "Player not found"}), 404
+
+    player = dict(zip(columns, row))
+    return jsonify(player)
+
 @app.route('/api/teams')
 def get_teams():
     cur = conn.cursor()

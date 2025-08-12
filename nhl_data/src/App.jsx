@@ -12,6 +12,7 @@ import Games from "./pages/games";
 import TestChart from "./pages/testChart";
 import TestCurl from "./pages/testCurl";
 import TestBar from "./pages/testBar";
+import PlayerProfile from "./pages/playerProfile";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
             <Routes>
                 <Route exact path="/" element={<Home />} />
                 <Route path="/players" element={<Players />} />
+                <Route path="/player/:id" element={<PlayerProfile />} />
                 <Route path="/teams" element={<Teams />} />
                 <Route path="/games" element={<Games />} />
                 <Route path="/testChart" element={<TestChart />} />
