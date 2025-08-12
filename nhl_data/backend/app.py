@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import psycopg2
 from dotenv import load_dotenv
@@ -23,6 +23,14 @@ conn = psycopg2.connect(
     host=pg_host,
     port=pg_port
 )
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve(path):
+    if path != "" and os.path.exists(f"static/{path}"):
+        return send_from_directory("static", path)
+    else:
+        return send_from_directory("static", "index.html")
 
 @app.route('/api/players')
 def get_players():
