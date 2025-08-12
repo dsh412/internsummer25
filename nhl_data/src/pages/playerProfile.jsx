@@ -1,42 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function PlayerProfile() {
-    const { id } = useParams();
-    const [player, setPlayer] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const { playerId } = useParams();
+  const [player, setPlayer] = useState(null);
 
-    useEffect(() => {
-        axios.get(`http://localhost:5000/api/player/${id}`)
-            .then(res => {
-                setPlayer(res.data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
-    }, [id]);
+  useEffect(() => {
+    axios.get(`http://localhost:5000/api/players/${playerId}`)
+      .then(res => setPlayer(res.data))
+      .catch(err => console.error(err));
+  }, [playerId]);
 
-    if (loading) return <div className="p-6">Loading...</div>;
-    if (!player) return <div className="p-6">Player not found.</div>;
+  if (!player) return <div>Loading...</div>;
 
-    return (
-        <div className="p-6 max-w-2xl mx-auto">
-            <h1 className="text-3xl font-bold mb-4">{player.full_name || player.playerid}</h1>
-            {player.headshot && (
-                <img src={player.headshot} alt={player.full_name} className="mb-4 rounded shadow" />
-            )}
-            <p><strong>Position:</strong> {player.position}</p>
-            <p><strong>Team:</strong> {player.currentteamabbrev}</p>
-            <p><strong>Height:</strong> {player.heightininches} in / {player.heightincentimeters} cm</p>
-            <p><strong>Weight:</strong> {player.weightinpounds} lbs / {player.weightinkilograms} kg</p>
-            <p><strong>Birth Date:</strong> {player.birthdate}</p>
-            <p><strong>Birth Country:</strong> {player.birthcountry}</p>
-            <p><strong>Shoots/Catches:</strong> {player.shootscatches}</p>
-        </div>
-    );
+  return (
+    <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold">{player.playerSlug}</h1>
+      {player.headshot && (
+        <img src={player.headshot} alt={player.playerSlug} className="w-32 h-32 rounded-full my-4" />
+      )}
+      <ul>
+        <li>Position: {player.position}</li>
+        <li>Team: {player.currentTeamAbbrev}</li>
+        <li>Height: {player.heightInInches} in ({player.heightInCentimeters} cm)</li>
+        <li>Weight: {player.weightInPounds} lbs ({player.weightInKilograms} kg)</li>
+        <li>Birth Date: {player.birthDate}</li>
+        <li>Birth Country: {player.birthCountry}</li>
+        <li>Shoots/Catches: {player.shootsCatches}</li>
+        <li>In HHOF: {player.inHHOF ? 'Yes' : 'No'}</li>
+        <li>Top 100 All-Time: {player.inTop100AllTime ? 'Yes' : 'No'}</li>
+      </ul>
+    </div>
+  );
 }
 
 export default PlayerProfile;
