@@ -57,20 +57,17 @@ function Players() {
 
             {/* Display results */}
             <div className="grid gap-4">
-                {filteredPlayers.map((player) => (
-                    <div key={player.id} className="border rounded p-4 shadow hover:bg-gray-50">
+                {filteredPlayers.map((player) =>  (
+                    <div key={player.playerid} className="border rounded p-4 shadow hover:bg-gray-50">
                         <Link 
-                            to={`/player/${player.id}`} 
+                            to={`/player/${player.playerid}`} 
                             className="text-blue-600 font-semibold hover:underline"
                         >
-                            {player.full_name || player.playerid}
+                          {player.playerslug}
                         </Link>
-                        <div className="text-gray-700">
-                            {player.position} — {player.currentteamabbrev}
-                        </div>
                     </div>
                 ))}
-
+              
                 {filteredPlayers.length === 0 && (
                     <div className="text-gray-500">No players match your criteria.</div>
                 )}

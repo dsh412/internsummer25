@@ -42,10 +42,10 @@ def get_players():
     cur.close()
     return jsonify(data)
 
-@app.route('/api/player/<int:player_id>')
-def get_player(player_id):
+@app.route('/api/player/:playerid')
+def get_player(playerid):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM nhl_data.players WHERE id = %s;", (player_id,))
+    cur.execute("SELECT * FROM nhl_data.players WHERE playerSlug = %s;", (playerid, ))
     row = cur.fetchone()
     columns = [desc[0] for desc in cur.description]
     cur.close()
