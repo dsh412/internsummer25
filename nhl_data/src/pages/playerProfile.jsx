@@ -15,11 +15,11 @@ function PlayerProfile() {
   
   return (
     <div className="max-w-5xl mx-auto p-6">
-      {/* Hero Banner */}
+      {/* Team Banner */}
       <div
         className="rounded-xl overflow-hidden shadow-lg mb-6"
         style={{
-          backgroundImage: `url(${player.heroimage || player.teamlogo})`,
+          backgroundImage: `url(${player.teamlogo})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           height: "250px",
@@ -57,11 +57,10 @@ function PlayerProfile() {
           </div>
         </div>
       </div>
-      {/* Team Logo */}
+      {/* Hero Image */}
       <div className="mt-6 flex justify-center">
         <img
-          src={player.teamlogo}
-          alt={`${player.currentteamabbrev} Logo`}
+          src={player.heroimage}
           className="w-24 h-24 object-contain"
         />
       </div>
