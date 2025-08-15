@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // ✅ added
+import { Link } from 'react-router-dom';
 import "../App.css";
 
 function Players() {
@@ -60,7 +60,7 @@ function Players() {
                 {filteredPlayers.map((player) =>  (
                     <div key={player.playerid} className="border rounded p-4 shadow hover:bg-gray-50">
                         <Link 
-                            to={`/player/${player.playerid}`} 
+                            to={`/players/${player.playerid}`} 
                             className="text-blue-600 font-semibold hover:underline"
                         >
                           {player.playerslug}

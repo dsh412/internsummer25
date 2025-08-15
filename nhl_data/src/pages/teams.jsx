@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import "../App.css";
 
 function Teams() {
@@ -53,13 +54,14 @@ function Teams() {
 
         {/* Display Results */}
         <div className="grid gap-4">
-            {filteredTeams.map((team, idx) => (
-                <div key={idx} className="border rounded p-4 shadow">
-                    {Object.entries(team).map(([key, value]) => (
-                        <div key={key}>
-                            <strong>{key}:</strong> {value}
-                        </div>
-                    ))}
+            {filteredTeams.map((team) => (
+                <div key={team.id} className="border rounded p-4 shadow hover:bg-gray-50">
+                        <Link 
+                            to={`/teams/${team.id}`} 
+                            className="text-blue-600 font-semibold hover:underline"
+                        >
+                          {team.fullname}
+                        </Link>
                 </div>
             ))}
 

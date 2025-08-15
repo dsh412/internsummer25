@@ -11,10 +11,10 @@ export default function Navbar() {
                     < FaBars />
                 </div>
                 <div className="nav-menu">
-                    <NavLink to="/" className="nav-link" activeClassName="active">Home</NavLink>
-                    <NavLink to="/players" className="nav-link" activeClassName="active">Players</NavLink>
-                    <NavLink to="/teams" className="nav-link" activeClassName="active">Teams</NavLink>
-                    <NavLink to="/games" className="nav-link" activeClassName="active">Games</NavLink>
+                    <NavLink to="/" className="nav-link" activeclassname="active">Home</NavLink>
+                    <NavLink to="/players" className="nav-link" activeclassname="active">Players</NavLink>
+                    <NavLink to="/teams" className="nav-link" activeclassname="active">Teams</NavLink>
+                    <NavLink to="/games" className="nav-link" activeclassname="active">Games</NavLink>
                 </div>
             </nav>
         </>

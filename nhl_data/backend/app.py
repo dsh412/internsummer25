@@ -42,19 +42,19 @@ def get_players():
     cur.close()
     return jsonify(data)
 
-@app.route('/api/player/:playerid')
+@app.route('/api/players/<playerid>')
 def get_player(playerid):
     cur = conn.cursor()
-    cur.execute("SELECT * FROM nhl_data.players WHERE playerSlug = %s;", (playerid, ))
+    cur.execute("SELECT * FROM nhl_data.players WHERE playerid = %s;", (playerid,))
     row = cur.fetchone()
-    columns = [desc[0] for desc in cur.description]
     cur.close()
-    
-    if not row:
-        return jsonify({"error": "Player not found"}), 404
 
-    player = dict(zip(columns, row))
-    return jsonify(player)
+    if row:
+        columns = [desc[0] for desc in cur.description]
+        player_data = dict(zip(columns, row))
+        return jsonify(player_data)
+    else:
+        return jsonify({"error": "Player not found"}), 404
 
 @app.route('/api/teams')
 def get_teams():
@@ -65,6 +65,20 @@ def get_teams():
     data = [dict(zip(columns, row)) for row in rows]
     cur.close()
     return jsonify(data)
+
+@app.route('/api/teams/<id>')
+def get_team(id):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM nhl_data.teams WHERE id = %s;", (id,))
+    row = cur.fetchone()
+    cur.close()
+
+    if row:
+        columns = [desc[0] for desc in cur.description]
+        team_data = dict(zip(columns, row))
+        return jsonify(team_data)
+    else:
+        return jsonify({"error": "Team not found"}), 404
 
 @app.route('/api/games')
 def get_games():
