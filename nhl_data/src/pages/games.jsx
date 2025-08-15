@@ -20,7 +20,7 @@ function Games() {
         .toLowerCase()
         .includes(search.toLowerCase());
     const matchesGameType = game_type
-        ? game.game_type?.toLowerCase() === game_type.toLowerCase()
+        ? Number(game.gametype) === parseInt(game_type)
         : true;
 
     return matchesSearch && matchesGameType;
@@ -46,8 +46,11 @@ function Games() {
                 className="p-2 border rounded"
             >
                 <option value="">All Game Types</option>
-                <option value="Regular">Regular Season</option>
-                <option value="Playoffs">Playoffs</option>
+                <option value="2">Regular Season</option>
+                <option value="3">Playoffs</option>
+                <option value="18">Exhibition</option>
+                <option value="4">Non-Preseason Exhibition</option>
+                <option value="13">Lockout</option>
             </select>
         </div>
 

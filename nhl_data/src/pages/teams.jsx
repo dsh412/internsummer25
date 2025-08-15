@@ -6,7 +6,7 @@ import "../App.css";
 function Teams() {
   const [teams, setTeams] = useState([]);
   const [search, setSearch] = useState('');
-  const [conference, setConference] = useState('');
+  const [league, setLeague] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/teams')
@@ -20,8 +20,8 @@ function Teams() {
         .toLowerCase()
         .includes(search.toLowerCase());
     
-    const matchesConference = conference
-        ? team.conference?.toLowerCase() === conference.toLowerCase()
+    const matchesConference = league
+        ? Number(team.leagueid) === parseInt(league)
         : true;
     
     return matchesSearch && matchesConference;
@@ -42,13 +42,13 @@ function Teams() {
             />
             
             <select
-                value={conference}
-                onChange={e => setConference(e.target.value)}
+                value={league}
+                onChange={e => setLeague(e.target.value)}
                 className="p-2 border rounded"
             >
-                <option value="">All Conferences</option>
-                <option value="Eastern">Eastern</option>
-                <option value="Western">Western</option>
+                <option value="">All Leagues</option>
+                <option value="133">NHL</option>
+                <option value="1">Other</option>
             </select>
         </div>
 
