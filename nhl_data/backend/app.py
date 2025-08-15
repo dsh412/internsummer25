@@ -90,6 +90,20 @@ def get_games():
     cur.close()
     return jsonify(data)
 
+@app.route('/api/games/<id>')
+def get_game(id):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM nhl_data.games WHERE id = %s;", (id,))
+    row = cur.fetchone()
+    cur.close()
+
+    if row:
+        columns = [desc[0] for desc in cur.description]
+        game_data = dict(zip(columns, row))
+        return jsonify(game_data)
+    else:
+        return jsonify({"error": "Game not found"}), 404
+
 @app.route('/api/testChart')
 def get_pie():
     cur = conn.cursor()

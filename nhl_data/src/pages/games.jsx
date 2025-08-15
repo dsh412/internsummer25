@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import "../App.css";
 
 function Games() {
@@ -52,13 +53,14 @@ function Games() {
 
         {/* Display Results */}
         <div className="grid gap-4">
-            {filteredGames.map((game, idx) => (
-                <div key={idx} className="border rounded p-4 shadow">
-                    {Object.entries(game).map(([key, value]) => (
-                        <div key={key}>
-                            <strong>{key}:</strong> {value}
-                        </div>
-                    ))}
+            {filteredGames.slice(0,250).map((game) => (
+                <div key={game.id} className="border rounded p-4 shadow">
+                    <Link
+                        to={`/games/${game.id}`}
+                        className="text-blue-600 font-semibold hover:underline"
+                        >
+                            {game.gamedate}
+                        </Link>
                 </div>
             ))}
 
